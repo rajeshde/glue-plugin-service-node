@@ -1,10 +1,10 @@
 {
     "name": "@gluestack/glue-plugin-service-node",
-    "version": "0.0.1",
-    "description": "Service plugin for gluestack",
+    "version": "0.0.2",
+    "description": "Node Service plugin for gluestack",
     "repository": {
         "type": "git",
-        "url": "https://github.com/gluestack/glue-plugin-service"
+        "url": "https://github.com/gluestack/glue-plugin-service-node"
     },
     "keywords": [
         "npm",
