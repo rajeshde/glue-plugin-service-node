@@ -1,0 +1,13 @@
+type Mutation {
+  actionName (input: actionNameInput!): actionNameResponse
+}
+
+input actionNameInput {
+  email: String!
+  password: String!
+}
+
+type actionNameResponse {
+  status: Boolean!
+  message: String!
+}
