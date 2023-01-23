@@ -1,8 +1,11 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const app = express();
 const port = 9000;
+const app = express();
+
+const loader = require('./helpers/loader');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,40 +38,16 @@ const middleware = (req, res, next) => {
   });
 };
 
+// App Routes
 (async () => {
-  const actionsPath = path.join(process.cwd(), '/actions');
+  // Loading Actions...
+  app.use(await loader('actions'));
 
-  const files = glob.sync('**/*.@(js|ts)', {
-    cwd: actionsPath,
-    ignore: [
-      '**/node_modules/**', // ignore node_modules directories
-      '**/_*/**', // ignore files inside directories that start with _
-      '**/_*' // ignore files that start with _
-    ]
-  });
-
-  for (const file of files) {
-    const { default: handler } = await import(path.join(actionsPath, file))
-    // File path relative to the project root directory. Used for logging.
-    const relativePath = path.relative(".", file)
-
-    if (handler) {
-      const route = `/${replaceSpecialChars(file.split("/")[0])}`
-
-      try {
-        app.post(route, handler)
-      } catch (error) {
-        console.warn(`Unable to load file ${relativePath} as a Serverless Function`)
-        continue
-      }
-
-      console.log(`Loaded route ${route} from ${relativePath}`)
-    } else {
-      console.warn(`No default export at ${relativePath}`)
-    }
-  }
+  // Loading Functions...
+  app.use(await loader('functions'));
 })();
 
+// App Listen
 app.listen(port, () => {
   console.log(`Action listening on port ${port}`)
 });
