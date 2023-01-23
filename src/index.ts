@@ -9,9 +9,11 @@ import IManagesInstances from "@gluestack/framework/types/plugin/interface/IMana
 import IGlueStorePlugin from "@gluestack/framework/types/store/interface/IGluePluginStore";
 
 import { writeEnv } from "./helpers/write-env";
-import { actionsAdd } from "./commands/actions-add";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { replaceSpecialChars } from "./helpers/replace-special-chars";
+
+import { functionsAdd } from "./commands/function-add";
+import { functionsAttachAction } from "./commands/function-attach-action";
 
 //Do not edit the name of this class
 export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
@@ -27,7 +29,8 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   init() {
-    this.app.addCommand((program: any) => actionsAdd(program, this));
+    this.app.addCommand((program: any) => functionsAdd(program, this));
+    this.app.addCommand((program: any) => functionsAttachAction(program, this));
   }
 
   destroy() {
@@ -55,7 +58,7 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   getActionTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template-action`;
+    return `${process.cwd()}/node_modules/${this.getName()}/src/template/action`;
   }
 
   async runPostInstall(instanceName: string, target: string) {

@@ -38,13 +38,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.handler = exports.writeAction = exports.functionsAdd = void 0;
 var prompts = require("prompts");
+var node_path_1 = require("node:path");
 var write_file_1 = require("../helpers/write-file");
 var function_content_1 = require("../helpers/function-content");
 var replace_special_chars_1 = require("../helpers/replace-special-chars");
+var create_folder_1 = require("../helpers/create-folder");
 function functionsAdd(program, glueStackPlugin) {
     var _this = this;
     program
-        .command("functions:add")
+        .command("function:add")
         .description("Adds an express action (handler) to the project")
         .argument('<function-name>', 'name of the function to be added')
         .action(function (functionName) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
@@ -53,10 +55,16 @@ function functionsAdd(program, glueStackPlugin) {
 }
 exports.functionsAdd = functionsAdd;
 var writeAction = function (pluginInstance, functionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var directory;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, (0, write_file_1.writeFile)("".concat(pluginInstance.getInstallationPath(), "/functions/").concat((0, replace_special_chars_1.replaceSpecialChars)(functionName), ".js"), function_content_1.functionContent)];
+            case 0:
+                directory = (0, node_path_1.join)(pluginInstance.getInstallationPath(), 'functions', (0, replace_special_chars_1.replaceRouteName)(functionName));
+                return [4, (0, create_folder_1.createFolder)(directory)];
             case 1:
+                _a.sent();
+                return [4, (0, write_file_1.writeFile)("".concat(directory, "/handler.js"), function_content_1.functionContent)];
+            case 2:
                 _a.sent();
                 return [2];
         }
@@ -114,4 +122,4 @@ function handler(glueStackPlugin, actionName) {
     });
 }
 exports.handler = handler;
-//# sourceMappingURL=functions-add.js.map
+//# sourceMappingURL=function-add.js.map

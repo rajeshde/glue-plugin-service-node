@@ -2,25 +2,35 @@ const prompts = require("prompts");
 import { GlueStackPlugin } from "..";
 import { PluginInstance } from "../PluginInstance";
 import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
-import { reWriteFile } from "../helpers/rewrite-file";
-import { replaceSpecialChars } from "../helpers/replace-special-chars";
-import { copyToTarget } from "../helpers/copy-to-target";
 
-export function actionsAdd(program: any, glueStackPlugin: GlueStackPlugin) {
+import { join } from "node:path";
+import { writeFile } from "../helpers/write-file";
+import { functionContent } from "../helpers/function-content";
+import {
+  replaceSpecialChars, replaceRouteName
+} from "../helpers/replace-special-chars";
+import { createFolder } from "../helpers/create-folder";
+
+export function functionsAdd(program: any, glueStackPlugin: GlueStackPlugin) {
   program
-    .command("actions:add")
-    .description("Adds a graphql action")
+    .command("function:add")
+    .description("Adds an express action (handler) to the project")
     .argument(
-      '<action-name>',
-      'name of the action to be added'
+      '<function-name>',
+      'name of the function to be added'
 		)
-    .action(async (actionName: string) => handler(glueStackPlugin, actionName));
+    .action(async (functionName: string) => handler(glueStackPlugin, functionName));
 }
 
-export const writeAction = async (pluginInstance: PluginInstance, actionName: string) => {
-  await copyToTarget(`${pluginInstance.callerPlugin.getActionTemplateFolderPath()}`, `${pluginInstance.getInstallationPath()}/actions/${actionName}`);
-  const actionGQLfile = `${pluginInstance.getInstallationPath()}/actions/${actionName}/action.graphql`;
-  await reWriteFile(actionGQLfile, replaceSpecialChars(actionName), 'actionName');
+export const writeAction = async (pluginInstance: PluginInstance, functionName: string) => {
+  const directory: string = join(pluginInstance.getInstallationPath(), 'functions', replaceRouteName(functionName));
+
+  await createFolder(directory);
+
+  await writeFile(
+    `${directory}/handler.js`,
+    functionContent
+  );
 };
 
 async function selectInstance(pluginInstances: IInstance[]) {

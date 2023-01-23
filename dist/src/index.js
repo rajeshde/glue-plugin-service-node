@@ -43,9 +43,10 @@ exports.GlueStackPlugin = void 0;
 var package_json_1 = __importDefault(require("../package.json"));
 var PluginInstance_1 = require("./PluginInstance");
 var write_env_1 = require("./helpers/write-env");
-var actions_add_1 = require("./commands/actions-add");
 var rewrite_file_1 = require("./helpers/rewrite-file");
 var replace_special_chars_1 = require("./helpers/replace-special-chars");
+var function_add_1 = require("./commands/function-add");
+var function_attach_action_1 = require("./commands/function-attach-action");
 var GlueStackPlugin = (function () {
     function GlueStackPlugin(app, gluePluginStore) {
         this.type = "stateless";
@@ -55,7 +56,8 @@ var GlueStackPlugin = (function () {
     }
     GlueStackPlugin.prototype.init = function () {
         var _this = this;
-        this.app.addCommand(function (program) { return (0, actions_add_1.actionsAdd)(program, _this); });
+        this.app.addCommand(function (program) { return (0, function_add_1.functionsAdd)(program, _this); });
+        this.app.addCommand(function (program) { return (0, function_attach_action_1.functionsAttachAction)(program, _this); });
     };
     GlueStackPlugin.prototype.destroy = function () {
     };
@@ -75,7 +77,7 @@ var GlueStackPlugin = (function () {
         return "./backend/services/".concat(target);
     };
     GlueStackPlugin.prototype.getActionTemplateFolderPath = function () {
-        return "".concat(process.cwd(), "/node_modules/").concat(this.getName(), "/template-action");
+        return "".concat(process.cwd(), "/node_modules/").concat(this.getName(), "/src/template/action");
     };
     GlueStackPlugin.prototype.runPostInstall = function (instanceName, target) {
         return __awaiter(this, void 0, void 0, function () {

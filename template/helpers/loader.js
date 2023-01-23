@@ -1,13 +1,12 @@
-const path = require("path");
 const glob = require("glob");
-
 const express = require("express");
-const router = express.Router();
-
+const { join, relative } = require("path");
 const replaceSpecialChars = require("./replace-special-chars");
 
+const router = express.Router();
+
 module.exports = async (folderName) => {
-  const folderPath = path.join(process.cwd(), folderName);
+  const folderPath = join(process.cwd(), folderName);
   const files = glob.sync('**/*.@(js|ts)', {
     cwd: folderPath,
     ignore: [
@@ -18,15 +17,15 @@ module.exports = async (folderName) => {
   });
 
   for await (const file of files) {
-    const { default: handler } = await import(path.join(folderPath, file));
+    const { default: handler } = await import(join(folderPath, file));
     // File path relative to the project root directory. Used for logging.
-    const relativePath = path.relative(".", file)
+    const relativePath = relative(".", file)
     if (handler) {
-      const filename = folderName === 'actions' ? file.split("/")[0] : file;
+      const filename = file.split("/")[0];
       const route = `/${replaceSpecialChars(filename)}`
 
       try {
-        router.post(route, handler);
+        router.all(route, handler);
       } catch (error) {
         console.warn(`Unable to load file ${relativePath} as a Serverless Function`);
         continue;
