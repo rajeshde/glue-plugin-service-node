@@ -40,9 +40,9 @@ exports.handler = exports.writeAction = exports.functionsAdd = void 0;
 var prompts = require("prompts");
 var node_path_1 = require("node:path");
 var write_file_1 = require("../helpers/write-file");
+var create_folder_1 = require("../helpers/create-folder");
 var function_content_1 = require("../helpers/function-content");
 var replace_special_chars_1 = require("../helpers/replace-special-chars");
-var create_folder_1 = require("../helpers/create-folder");
 function functionsAdd(program, glueStackPlugin) {
     var _this = this;
     program

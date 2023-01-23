@@ -5,11 +5,9 @@ import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
 
 import { join } from "node:path";
 import { writeFile } from "../helpers/write-file";
-import { functionContent } from "../helpers/function-content";
-import {
-  replaceSpecialChars, replaceRouteName
-} from "../helpers/replace-special-chars";
 import { createFolder } from "../helpers/create-folder";
+import { functionContent } from "../helpers/function-content";
+import { replaceRouteName } from "../helpers/replace-special-chars";
 
 export function functionsAdd(program: any, glueStackPlugin: GlueStackPlugin) {
   program
