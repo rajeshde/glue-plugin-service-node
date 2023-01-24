@@ -96,7 +96,7 @@ const writeAction = async (pluginInstance: PluginInstance) => {
   let functionName: string = await selectFunction(directories);
   if (functionName) {
     const oldName: string = functionName;
-    functionName = oldName.replace('-', '_');
+    functionName = oldName.replaceAll('-', '_');
 
     await renameDirectory(functionsPath + '/' + oldName, functionsPath + '/' + functionName);
   }

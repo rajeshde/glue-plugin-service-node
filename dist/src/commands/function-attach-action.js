@@ -150,7 +150,7 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
                 functionName = _a.sent();
                 if (!functionName) return [3, 5];
                 oldName = functionName;
-                functionName = oldName.replace('-', '_');
+                functionName = oldName.replaceAll('-', '_');
                 return [4, (0, rename_directory_1.renameDirectory)(functionsPath + '/' + oldName, functionsPath + '/' + functionName)];
             case 4:
                 _a.sent();
