@@ -135,14 +135,14 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
                 return [4, (0, file_exists_1.fileExists)(functionsPath)];
             case 1:
                 if (!(_a.sent())) {
-                    console.error("No functions found in ".concat((0, node_path_1.relative)('.', functionsPath), ". Please add one and try again!"));
+                    console.log("No functions found in ".concat((0, node_path_1.relative)('.', functionsPath), ". Please add one and try again!"));
                     return [2];
                 }
                 return [4, (0, get_directories_1.getDirectories)(functionsPath)];
             case 2:
                 directories = _a.sent();
                 if (!directories.length) {
-                    console.error("No functions found in ".concat((0, node_path_1.relative)('.', functionsPath), ". Please add one and try again!"));
+                    console.log("No functions found in ".concat((0, node_path_1.relative)('.', functionsPath), ". Please add one and try again!"));
                     return [2];
                 }
                 return [4, selectFunction(directories)];
@@ -160,7 +160,7 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
                 return [4, (0, file_exists_1.fileExists)(functionPath + '/handler.js')];
             case 6:
                 if (!(_a.sent())) {
-                    console.error("Missing \"handler.js\" file in \"".concat((0, node_path_1.relative)('.', functionPath), "\". Please add one and try again!"));
+                    console.log("Missing \"handler.js\" file in \"".concat((0, node_path_1.relative)('.', functionPath), "\". Please add one and try again!"));
                     return [2];
                 }
                 return [4, (0, copy_to_target_1.copyToTarget)(pluginInstance.callerPlugin.getActionTemplateFolderPath(), functionPath)];
@@ -198,7 +198,7 @@ function handler(glueStackPlugin) {
                     _a.label = 4;
                 case 4: return [3, 6];
                 case 5:
-                    console.error("No service instances found");
+                    console.log("No service instances found");
                     _a.label = 6;
                 case 6: return [2];
             }

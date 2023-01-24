@@ -83,13 +83,13 @@ const writeAction = async (pluginInstance: PluginInstance) => {
   );
 
   if (!await fileExists(functionsPath)) {
-    console.error(`No functions found in ${relative('.', functionsPath)}. Please add one and try again!`);
+    console.log(`No functions found in ${relative('.', functionsPath)}. Please add one and try again!`);
     return;
   }
 
   const directories: string[] = await getDirectories(functionsPath);
   if (!directories.length) {
-    console.error(`No functions found in ${relative('.', functionsPath)}. Please add one and try again!`);
+    console.log(`No functions found in ${relative('.', functionsPath)}. Please add one and try again!`);
     return;
   }
 
@@ -103,7 +103,7 @@ const writeAction = async (pluginInstance: PluginInstance) => {
 
   const functionPath: string = join(functionsPath, functionName);
   if (!await fileExists(functionPath + '/handler.js')) {
-    console.error(`Missing "handler.js" file in "${relative('.', functionPath)}". Please add one and try again!`);
+    console.log(`Missing "handler.js" file in "${relative('.', functionPath)}". Please add one and try again!`);
     return;
   }
 
@@ -130,6 +130,6 @@ export async function handler(glueStackPlugin: GlueStackPlugin) {
       await writeAction(instance);
     }
   } else {
-    console.error("No service instances found");
+    console.log("No service instances found");
   }
 }
