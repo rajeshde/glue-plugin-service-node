@@ -38,12 +38,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.handler = exports.functionsAttachAction = void 0;
 var prompts = require("prompts");
+var services = require("@gluestack/framework/constants/services");
 var node_path_1 = require("node:path");
 var rewrite_file_1 = require("../helpers/rewrite-file");
 var replace_special_chars_1 = require("../helpers/replace-special-chars");
 var copy_to_target_1 = require("../helpers/copy-to-target");
 var get_directories_1 = require("../helpers/get-directories");
 var file_exists_1 = require("../helpers/file-exists");
+var rename_directory_1 = require("../helpers/rename-directory");
 var functionsAttachAction = function (program, glueStackPlugin) {
     program
         .command("function:attach-action")
@@ -53,6 +55,30 @@ var functionsAttachAction = function (program, glueStackPlugin) {
     }); }); });
 };
 exports.functionsAttachAction = functionsAttachAction;
+var selectPluginName = function (services) { return __awaiter(void 0, void 0, void 0, function () {
+    var choices, value;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                choices = services.map(function (service) {
+                    return {
+                        title: service,
+                        description: "Select a language for your service",
+                        value: service
+                    };
+                });
+                return [4, prompts({
+                        type: "select",
+                        name: "value",
+                        message: "Select a service plugin",
+                        choices: choices
+                    })];
+            case 1:
+                value = (_a.sent()).value;
+                return [2, value];
+        }
+    });
+}); };
 var selectInstance = function (pluginInstances) { return __awaiter(void 0, void 0, void 0, function () {
     var choices, value;
     return __generator(this, function (_a) {
@@ -101,7 +127,7 @@ var selectFunction = function (functions) { return __awaiter(void 0, void 0, voi
     });
 }); };
 var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, void 0, function () {
-    var functionsPath, directories, functionName, functionPath, actionGQLfile;
+    var functionsPath, directories, functionName, oldName, functionPath, actionGQLfile;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -122,19 +148,27 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
                 return [4, selectFunction(directories)];
             case 3:
                 functionName = _a.sent();
+                if (!functionName) return [3, 5];
+                oldName = functionName;
+                functionName = oldName.replace('-', '_');
+                return [4, (0, rename_directory_1.renameDirectory)(functionsPath + '/' + oldName, functionsPath + '/' + functionName)];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5:
                 functionPath = (0, node_path_1.join)(functionsPath, functionName);
                 return [4, (0, file_exists_1.fileExists)(functionPath + '/handler.js')];
-            case 4:
+            case 6:
                 if (!(_a.sent())) {
                     console.error("Missing \"handler.js\" file in \"".concat((0, node_path_1.relative)('.', functionPath), "\". Please add one and try again!"));
                     return [2];
                 }
                 return [4, (0, copy_to_target_1.copyToTarget)(pluginInstance.callerPlugin.getActionTemplateFolderPath(), functionPath)];
-            case 5:
+            case 7:
                 _a.sent();
                 actionGQLfile = "".concat(functionPath, "/action.graphql");
                 return [4, (0, rewrite_file_1.reWriteFile)(actionGQLfile, (0, replace_special_chars_1.replaceSpecialChars)(functionName), 'actionName')];
-            case 6:
+            case 8:
                 _a.sent();
                 return [2];
         }
@@ -142,24 +176,31 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
 }); };
 function handler(glueStackPlugin) {
     return __awaiter(this, void 0, void 0, function () {
-        var instance;
+        var pluginName, plugin, instance;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    if (!glueStackPlugin.getInstances().length) return [3, 4];
-                    return [4, selectInstance(glueStackPlugin.getInstances())];
+                case 0: return [4, selectPluginName(services)];
                 case 1:
-                    instance = _a.sent();
-                    if (!instance) return [3, 3];
-                    return [4, writeAction(instance)];
+                    pluginName = _a.sent();
+                    if (!pluginName) {
+                        console.log("No plugin selected");
+                        return [2];
+                    }
+                    plugin = glueStackPlugin.app.getPluginByName(pluginName);
+                    if (!(plugin && plugin.getInstances().length)) return [3, 5];
+                    return [4, selectInstance(glueStackPlugin.getInstances())];
                 case 2:
+                    instance = _a.sent();
+                    if (!instance) return [3, 4];
+                    return [4, writeAction(instance)];
+                case 3:
                     _a.sent();
-                    _a.label = 3;
-                case 3: return [3, 5];
-                case 4:
+                    _a.label = 4;
+                case 4: return [3, 6];
+                case 5:
                     console.error("No service instances found");
-                    _a.label = 5;
-                case 5: return [2];
+                    _a.label = 6;
+                case 6: return [2];
             }
         });
     });

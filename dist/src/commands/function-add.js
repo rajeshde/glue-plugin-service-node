@@ -36,8 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.handler = exports.writeAction = exports.functionsAdd = void 0;
+exports.functionsAdd = void 0;
 var prompts = require("prompts");
+var services = require("@gluestack/framework/constants/services");
 var node_path_1 = require("node:path");
 var write_file_1 = require("../helpers/write-file");
 var create_folder_1 = require("../helpers/create-folder");
@@ -54,6 +55,30 @@ function functionsAdd(program, glueStackPlugin) {
     }); }); });
 }
 exports.functionsAdd = functionsAdd;
+var selectPluginName = function (services) { return __awaiter(void 0, void 0, void 0, function () {
+    var choices, value;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                choices = services.map(function (service) {
+                    return {
+                        title: service,
+                        description: "Select a language for your service",
+                        value: service
+                    };
+                });
+                return [4, prompts({
+                        type: "select",
+                        name: "value",
+                        message: "Select a service plugin",
+                        choices: choices
+                    })];
+            case 1:
+                value = (_a.sent()).value;
+                return [2, value];
+        }
+    });
+}); };
 var writeAction = function (pluginInstance, functionName) { return __awaiter(void 0, void 0, void 0, function () {
     var directory;
     return __generator(this, function (_a) {
@@ -70,56 +95,57 @@ var writeAction = function (pluginInstance, functionName) { return __awaiter(voi
         }
     });
 }); };
-exports.writeAction = writeAction;
-function selectInstance(pluginInstances) {
-    return __awaiter(this, void 0, void 0, function () {
-        var choices, value;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    choices = pluginInstances.map(function (instance) {
-                        return {
-                            title: instance.getName(),
-                            description: "Select ".concat(instance.getName(), " instance"),
-                            value: instance
-                        };
-                    });
-                    return [4, prompts({
-                            type: "select",
-                            name: "value",
-                            message: "Select an instance",
-                            choices: choices
-                        })];
-                case 1:
-                    value = (_a.sent()).value;
-                    return [2, value];
-            }
-        });
+var selectInstance = function (pluginInstances) { return __awaiter(void 0, void 0, void 0, function () {
+    var choices, value;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                choices = pluginInstances.map(function (instance) {
+                    return {
+                        title: instance.getName(),
+                        description: "Select ".concat(instance.getName(), " instance"),
+                        value: instance
+                    };
+                });
+                return [4, prompts({
+                        type: "select",
+                        name: "value",
+                        message: "Select an instance",
+                        choices: choices
+                    })];
+            case 1:
+                value = (_a.sent()).value;
+                return [2, value];
+        }
     });
-}
-function handler(glueStackPlugin, actionName) {
-    return __awaiter(this, void 0, void 0, function () {
-        var instance;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!glueStackPlugin.getInstances().length) return [3, 4];
-                    return [4, selectInstance(glueStackPlugin.getInstances())];
-                case 1:
-                    instance = _a.sent();
-                    if (!instance) return [3, 3];
-                    return [4, (0, exports.writeAction)(instance, actionName)];
-                case 2:
-                    _a.sent();
-                    _a.label = 3;
-                case 3: return [3, 5];
-                case 4:
-                    console.error("No functions.action instances found");
-                    _a.label = 5;
-                case 5: return [2];
-            }
-        });
+}); };
+var handler = function (glueStackPlugin, actionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var pluginName, plugin, instance;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4, selectPluginName(services)];
+            case 1:
+                pluginName = _a.sent();
+                if (!pluginName) {
+                    console.log("No plugin selected");
+                    return [2];
+                }
+                plugin = glueStackPlugin.app.getPluginByName(pluginName);
+                if (!(plugin && plugin.getInstances().length)) return [3, 5];
+                return [4, selectInstance(plugin.getInstances())];
+            case 2:
+                instance = _a.sent();
+                if (!instance) return [3, 4];
+                return [4, writeAction(instance, actionName)];
+            case 3:
+                _a.sent();
+                _a.label = 4;
+            case 4: return [3, 6];
+            case 5:
+                console.error("No service instances found");
+                _a.label = 6;
+            case 6: return [2];
+        }
     });
-}
-exports.handler = handler;
+}); };
 //# sourceMappingURL=function-add.js.map

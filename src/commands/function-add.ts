@@ -1,4 +1,6 @@
 const prompts = require("prompts");
+const services = require("@gluestack/framework/constants/services");
+
 import { GlueStackPlugin } from "..";
 import { PluginInstance } from "../PluginInstance";
 import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
@@ -20,7 +22,26 @@ export function functionsAdd(program: any, glueStackPlugin: GlueStackPlugin) {
     .action(async (functionName: string) => handler(glueStackPlugin, functionName));
 }
 
-export const writeAction = async (pluginInstance: PluginInstance, functionName: string) => {
+const selectPluginName = async (services: string[]) => {
+  const choices = services.map((service: string) => {
+    return {
+      title: service,
+      description: `Select a language for your service`,
+      value: service,
+    };
+  });
+
+  const { value } = await prompts({
+    type: "select",
+    name: "value",
+    message: "Select a service plugin",
+    choices: choices,
+  });
+
+  return value;
+};
+
+const writeAction = async (pluginInstance: PluginInstance, functionName: string) => {
   const directory: string = join(pluginInstance.getInstallationPath(), 'functions', replaceRouteName(functionName));
 
   await createFolder(directory);
@@ -31,7 +52,7 @@ export const writeAction = async (pluginInstance: PluginInstance, functionName: 
   );
 };
 
-async function selectInstance(pluginInstances: IInstance[]) {
+const selectInstance = async (pluginInstances: IInstance[]) => {
   const choices = pluginInstances.map((instance: PluginInstance) => {
     return {
       title: instance.getName(),
@@ -47,15 +68,22 @@ async function selectInstance(pluginInstances: IInstance[]) {
   });
 
   return value;
-}
+};
 
-export async function handler(glueStackPlugin: GlueStackPlugin, actionName: string) {
-  if (glueStackPlugin.getInstances().length) {
-    const instance = await selectInstance(glueStackPlugin.getInstances());
+const handler = async (glueStackPlugin: GlueStackPlugin, actionName: string) => {
+  const pluginName = await selectPluginName(services);
+  if (!pluginName) {
+    console.log("No plugin selected");
+    return;
+  }
+
+  const plugin = glueStackPlugin.app.getPluginByName(pluginName);
+  if (plugin && plugin.getInstances().length) {
+    const instance = await selectInstance(plugin.getInstances());
     if (instance) {
       await writeAction(instance, actionName);
     }
   } else {
-    console.error("No functions.action instances found");
+    console.error("No service instances found");
   }
-}
+};
