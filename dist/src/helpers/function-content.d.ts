@@ -1,0 +1,1 @@
+export declare const functionContent = "\nmodule.exports = (req, res, _next) => {\n  // do something with the headers & body\n  console.log({ headers: req.headers, body: req.body });\n\n  return res.status(200).json({ status: true, message: \"Hello World!\" });\n};\n";

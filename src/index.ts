@@ -10,14 +10,14 @@ import IGlueStorePlugin from "@gluestack/framework/types/store/interface/IGluePl
 
 import { writeEnv } from "./helpers/write-env";
 import { reWriteFile } from "./helpers/rewrite-file";
-const { removeSpecialChars } = require("@gluestack/helpers");
 
 import { functionsAdd } from "./commands/function-add";
 import { functionsAttachAction } from "./commands/function-attach-action";
+
+const { removeSpecialChars } = require("@gluestack/helpers");
 const { Workspaces } = require("@gluestack/helpers");
 
-
-//Do not edit the name of this class
+// Do not edit the name of this class
 export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   app: IApp;
   instances: IInstance[];

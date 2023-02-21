@@ -44,9 +44,9 @@ var package_json_1 = __importDefault(require("../package.json"));
 var PluginInstance_1 = require("./PluginInstance");
 var write_env_1 = require("./helpers/write-env");
 var rewrite_file_1 = require("./helpers/rewrite-file");
-var removeSpecialChars = require("@gluestack/helpers").removeSpecialChars;
 var function_add_1 = require("./commands/function-add");
 var function_attach_action_1 = require("./commands/function-attach-action");
+var removeSpecialChars = require("@gluestack/helpers").removeSpecialChars;
 var Workspaces = require("@gluestack/helpers").Workspaces;
 var GlueStackPlugin = (function () {
     function GlueStackPlugin(app, gluePluginStore) {
