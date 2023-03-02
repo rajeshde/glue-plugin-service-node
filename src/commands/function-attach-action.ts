@@ -119,6 +119,12 @@ const writeAction = async (pluginInstance: PluginInstance) => {
 };
 
 export async function handler(glueStackPlugin: GlueStackPlugin) {
+  const graphqlPlugin = await glueStackPlugin.app.getPluginByName("@gluestack/glue-plugin-graphql");
+  if (!graphqlPlugin?.getInstances()?.length) {
+    console.log("No graphql instance found");
+    return;
+  }
+
   const pluginName = await selectPluginName(services);
   if (!pluginName) {
     console.log("No plugin selected");

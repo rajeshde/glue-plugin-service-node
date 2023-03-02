@@ -175,32 +175,40 @@ var writeAction = function (pluginInstance) { return __awaiter(void 0, void 0, v
     });
 }); };
 function handler(glueStackPlugin) {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var pluginName, plugin, instance;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4, selectPluginName(services)];
+        var graphqlPlugin, pluginName, plugin, instance;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4, glueStackPlugin.app.getPluginByName("@gluestack/glue-plugin-graphql")];
                 case 1:
-                    pluginName = _a.sent();
+                    graphqlPlugin = _b.sent();
+                    if (!((_a = graphqlPlugin === null || graphqlPlugin === void 0 ? void 0 : graphqlPlugin.getInstances()) === null || _a === void 0 ? void 0 : _a.length)) {
+                        console.log("No graphql instance found");
+                        return [2];
+                    }
+                    return [4, selectPluginName(services)];
+                case 2:
+                    pluginName = _b.sent();
                     if (!pluginName) {
                         console.log("No plugin selected");
                         return [2];
                     }
                     plugin = glueStackPlugin.app.getPluginByName(pluginName);
-                    if (!(plugin && plugin.getInstances().length)) return [3, 5];
+                    if (!(plugin && plugin.getInstances().length)) return [3, 6];
                     return [4, selectInstance(glueStackPlugin.getInstances())];
-                case 2:
-                    instance = _a.sent();
-                    if (!instance) return [3, 4];
-                    return [4, writeAction(instance)];
                 case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4: return [3, 6];
-                case 5:
+                    instance = _b.sent();
+                    if (!instance) return [3, 5];
+                    return [4, writeAction(instance)];
+                case 4:
+                    _b.sent();
+                    _b.label = 5;
+                case 5: return [3, 7];
+                case 6:
                     console.log("No service instances found");
-                    _a.label = 6;
-                case 6: return [2];
+                    _b.label = 7;
+                case 7: return [2];
             }
         });
     });
