@@ -9,42 +9,28 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 # How to Install
 
-##
+## node glue service:add
 
-<br/>
+To add a micro-service to your gluestack project, you can use the following command in the root directory of your project:
 
-* To add a custom service to your Gluestack project, you can use the following command in the root directory of your project:
+```sh
+$ node glue add service:add
+```
 
-  ```sh
-  $ node glue add service:add
-  ```
+During the installation process, you will be prompted to select a service type, such as **service-node**.
 
-* During the installation process, you will be prompted to select a service type, such as **service-node**.
+<img src='/assets/select-service.png' />
 
-     <br/>
+Once you have selected your desired service type, you will be prompted to provide an **instance name** for your service.
 
-    <img src='/assets/select-service.png' />
+<img src='/assets/instance-name.png' />
 
-    <br />
+For example, let's say we want to install an instance named **landlord** in our **gluestack** project.
 
+After a successful installation, you should see a new directory named **landlord**, located in the **backend/services** folder of your project. This directory will contain all the necessary files and folders for your service, allowing you to customize it according to your needs.
 
-* Once you have selected your desired service type, you will be prompted to provide an **instance name** for your service.
-
-    <br/> 
-
-    <img src='/assets/instance-name.png' />
-
-     <br/>
-
-
-* For example, let's say we want to install an instance named **authservice** in our **Gluestack** project.
-
-  <br/>
-
-* After a successful installation, you should see a new directory named **authservice**, located in the **backend/services** folder of your project. This directory will contain all the necessary files and folders for your service, allowing you to customize it according to your needs.
-
-   ```jsx
-      📂backend
-      ┗ 📂services
-          ┗ 📂authservice
-    ```
+```jsx
+  📂 backend
+  ┗ 📂 services
+      ┗ 📂 landlord
+```

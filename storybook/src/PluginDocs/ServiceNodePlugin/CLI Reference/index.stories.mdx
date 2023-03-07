@@ -9,27 +9,27 @@ import { Canvas, Meta, Story } from "@storybook/addon-docs";
 
 # CLI Reference
 
-## Service-Node
+## node glue function:add
 
-  * This command will add a function to your service with a basic **ExpressJS** handler.
+This command will add a function (which is basically a route) to your micro-service with a basic **ExpressJS** handler.
 
-    <br/>
+```sh
+$ node glue function:add <function-name>
+```
 
-    ```bash
-    $ node glue function:add <function-name>
-    ```
+## node glue function:attach-action
 
-    <br/>
-    
+This command will attach **Hasura GraphQL Action** to your **function** with a basic **ExpressJS** handler.
 
-  * This command will add a **graphql** action to your **function** with a basic **ExpressJS** handler.
+_Note: In case, you don't have any **GraphQL** instances installed in your gluestack project, then command won't do anything._
 
-    <br/>
+```sh
+$ node glue function:attach-action
+```
 
-    ```bash
-    $ node glue function:attach-action
-    ```
+After running this command, you will be prompted to select a service type. Choose the **"service-node"** option,
+and then select a service instance for adding a GraphQL action.
 
-    <br/>
+Next, choose one of the available instance.
 
-    After running this command, you will be prompted to select a service type. Choose the **"service-node"** option, and then select a service instance for adding a GraphQL action. Next, choose the **"authservice"** instance. Finally, you will be asked to select a function to add a **GraphQL** action.
+Finally, you will be asked to select a function (express route) to add a **GraphQL** action.
