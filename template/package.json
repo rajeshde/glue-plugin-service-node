@@ -5,7 +5,8 @@
   "scripts": {
     "start:server": "nodemon server.js",
     "build": "",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:prod": "node server.js"
   },
   "license": "ISC",
   "dependencies": {

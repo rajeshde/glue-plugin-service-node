@@ -1,6 +1,6 @@
 {
   "name": "@gluestack/glue-plugin-service-node",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Node Service plugin for gluestack",
   "repository": {
     "type": "git",
